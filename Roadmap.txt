@@ -1,0 +1,885 @@
+Cybersecurity Gaps in PLM Platforms: Windchill & ENOVIA
+Security Assessment Datasheet
+
+Domain: Product Lifecycle Management (PLM)
+Platforms: PTC Windchill and Dassault Systèmes ENOVIA
+Assessment Focus: Application Security, Identity & Access Management, Data Protection, Integration Security, Auditability, and DevSecOps
+Audience: PLM Architects, Cybersecurity Engineers, Product Security Teams, Administrators, and Enterprise Architects
+
+1. Executive Summary
+
+Product Lifecycle Management (PLM) platforms contain some of the most sensitive information within an engineering-driven organization. CAD models, product structures, engineering requirements, manufacturing information, supplier data, bills of material (BOMs), change requests, intellectual property, and product configuration data may all reside within or pass through the PLM ecosystem.
+
+Two widely deployed enterprise PLM ecosystems are:
+
+PTC Windchill
+Dassault Systèmes ENOVIA / 3DEXPERIENCE
+
+While these platforms provide extensive enterprise security capabilities, the overall security posture of a PLM environment depends heavily on how the platform is configured, integrated, customized, and operated.
+
+The primary security challenge is therefore not necessarily a vulnerability in the PLM product itself. It is often the combination of:
+
+Excessive user privileges
+Weak identity and access-control design
+Misconfigured organizational or project boundaries
+Insecure integrations
+Poor protection of engineering files
+Insufficient audit monitoring
+Legacy/customized applications
+Service-account over-privileging
+Inadequate API security
+Weak security governance across the PLM ecosystem
+
+This document provides a security-oriented framework for identifying and reducing these gaps.
+
+2. PLM Security Architecture
+
+A typical enterprise PLM environment can be represented as:
+
+                    ┌─────────────────────┐
+                    │     Engineers       │
+                    │ Designers / Vendors │
+                    └──────────┬──────────┘
+                               │
+                         SSO / MFA / IAM
+                               │
+                ┌──────────────▼──────────────┐
+                │        PLM Platform         │
+                │                              │
+                │  Windchill / ENOVIA         │
+                │                              │
+                │  • Documents                │
+                │  • CAD                      │
+                │  • BOM                      │
+                │  • Change Management        │
+                │  • Workflow                 │
+                │  • Configuration            │
+                └───────┬─────────┬───────────┘
+                        │         │
+              ┌─────────▼───┐ ┌───▼──────────┐
+              │ PLM Database │ │ File/Object  │
+              │              │ │ Storage      │
+              └──────────────┘ └──────────────┘
+                        │
+          ┌─────────────┼────────────────┐
+          │             │                │
+     ERP/SAP        CAD Systems       MES
+          │             │                │
+          └─────────────┼────────────────┘
+                        │
+                 External Suppliers
+                 / Partners / APIs
+
+The attack surface extends beyond the PLM application.
+
+A realistic PLM security assessment should therefore include:
+
+PLM Application
+      +
+Identity Provider
+      +
+Database
+      +
+File Storage
+      +
+APIs
+      +
+Integration Middleware
+      +
+CAD Systems
+      +
+ERP/MES
+      +
+Administrators
+      +
+External Suppliers
+3. Major Cybersecurity Gaps
+3.1 Excessive Privileges
+
+One of the most significant PLM risks is excessive access.
+
+A user may require permission to:
+
+Read → CAD drawings
+Read → BOM
+Create → Engineering Change Request
+
+but may inadvertently receive:
+
+Modify → Production BOM
+Delete → Engineering documents
+Administer → Organization
+Export → Sensitive product data
+
+This creates an unnecessary attack path.
+
+Security concern
+
+Compromising one privileged engineering account could allow an attacker to access large volumes of intellectual property.
+
+Recommended controls
+
+Implement:
+
+Role-Based Access Control (RBAC)
+Attribute-Based Access Control (ABAC) where appropriate
+Least privilege
+Separation of duties
+Periodic access reviews
+Privileged account monitoring
+Automated joiner/mover/leaver processes
+4. Windchill-Specific Security Considerations
+
+PTC Windchill commonly operates as part of a broader engineering ecosystem involving CAD applications, databases, file repositories, identity providers, and enterprise integrations.
+
+Important security areas include:
+
+4.1 Authentication
+
+Assess:
+
+SSO integration
+MFA enforcement
+Authentication policies
+Administrative accounts
+Service accounts
+Session management
+Password policies where locally managed authentication exists
+4.2 Authorization
+
+Review:
+
+Organization structure
+Product/container permissions
+Roles
+Groups
+Team membership
+Lifecycle permissions
+Workflow permissions
+Administrative privileges
+
+A particularly important question is:
+
+Can a user access engineering information outside the product, project, organization, or supplier boundary to which they belong?
+
+4.3 CAD and Intellectual Property Protection
+
+Windchill environments may contain highly sensitive CAD and engineering data.
+
+Security controls should address:
+
+CAD file
+   ↓
+Workspace
+   ↓
+PLM repository
+   ↓
+Download
+   ↓
+Local workstation
+   ↓
+Supplier / external system
+
+Every transition represents a potential data-loss boundary.
+
+Security controls should include:
+
+Data classification
+Download controls
+Encryption
+Endpoint protection
+DLP
+Watermarking where appropriate
+Supplier access restrictions
+Export monitoring
+5. ENOVIA-Specific Security Considerations
+
+ENOVIA operates within the broader Dassault Systèmes ecosystem and can participate in complex engineering and product-data workflows.
+
+Security assessment should include:
+
+5.1 Identity and Roles
+
+Review:
+
+User roles
+Business roles
+Organization assignments
+Collaborative spaces
+Project membership
+Administrative privileges
+External identities
+5.2 Data Segmentation
+
+Organizations frequently use PLM to separate:
+
+Business Unit A
+      │
+      ├── Product A
+      └── Product B
+
+Business Unit B
+      │
+      ├── Product C
+      └── Product D
+
+Supplier
+      │
+      └── Limited Product Access
+
+The security objective is to prevent unintended cross-boundary access.
+
+6. Comparative Security Gap Matrix
+Security Area	Windchill	ENOVIA	Risk
+Excessive privileges	Possible	Possible	High
+Weak role design	Possible	Possible	High
+Inadequate MFA	Deployment dependent	Deployment dependent	High
+Service-account privilege	Possible	Possible	High
+API authorization gaps	Integration dependent	Integration dependent	High
+Excessive data export	Possible	Possible	High
+Supplier access	Configuration dependent	Configuration dependent	High
+Audit visibility	Configuration dependent	Configuration dependent	Medium/High
+Legacy customization	Common risk	Common risk	High
+Insecure integrations	High concern	High concern	High
+Unmanaged local files	High concern	High concern	High
+Poor access reviews	Organizational risk	Organizational risk	High
+Data classification	Organizational risk	Organizational risk	Medium
+DLP integration	Environment dependent	Environment dependent	Medium/High
+
+Important: The table identifies areas requiring assessment; it does not imply that a specific product version contains a vulnerability.
+
+7. API Security Gaps
+
+Modern PLM deployments commonly expose APIs for:
+
+ERP ↔ PLM
+MES ↔ PLM
+CAD ↔ PLM
+Supplier ↔ PLM
+Analytics ↔ PLM
+Custom applications ↔ PLM
+
+Every API creates an additional trust boundary.
+
+Potential weaknesses include:
+
+Authentication
+Weak / shared credentials
+Long-lived tokens
+Missing MFA for privileged workflows
+Poor service-account management
+Authorization
+Authenticated user
+        ↓
+API request
+        ↓
+Object lookup
+        ↓
+Missing object-level authorization
+        ↓
+Unauthorized data exposure
+
+The security principle should be:
+
+Authentication establishes who the requester is; authorization establishes what that requester is allowed to access.
+
+8. Service Account Security
+
+PLM integrations frequently require non-human accounts.
+
+For example:
+
+SAP Integration
+       ↓
+PLM Service Account
+       ↓
+Create / Update BOM
+
+A common security mistake is granting the service account:
+
+Administrator
+
+when it only needs:
+
+Create BOM
+Read Material
+Update Approved Attributes
+Recommended design
+
+Use separate accounts:
+
+plm-erp-read
+plm-erp-write
+plm-mes-integration
+plm-supplier-api
+plm-reporting
+
+Each account should have only the permissions required for its function.
+
+9. Audit and Logging Gaps
+
+A PLM security program should be able to answer:
+
+Who accessed a sensitive CAD file?
+Who downloaded it?
+Who changed a BOM?
+Who approved the engineering change?
+Who changed permissions?
+Who created a new administrator?
+Which API accessed the object?
+Was the access successful?
+From which identity?
+When did the event occur?
+
+A useful logging model is:
+
+{
+  "timestamp": "2026-08-09T18:20:00Z",
+  "user": "engineering_user",
+  "action": "DOWNLOAD",
+  "object_type": "CAD_DOCUMENT",
+  "object_id": "REDACTED",
+  "result": "SUCCESS",
+  "source": "PLM_APPLICATION",
+  "risk": "HIGH"
+}
+
+Logs should be forwarded to a centralized security monitoring platform where feasible.
+
+10. Security Monitoring Architecture
+Windchill ───────┐
+                 │
+ENOVIA ──────────┤
+                 │
+Identity Provider├──────► SIEM
+                 │
+API Gateway ─────┤
+                 │
+Database ────────┤
+                 │
+Endpoint/DLP ────┘
+                         │
+                         ▼
+                   Detection Rules
+                         │
+                         ▼
+                    SOC / CSIRT
+
+Useful detection scenarios include:
+
+Unusual download volume
+Normal:
+Engineer → 10 files/day
+
+Suspicious:
+Engineer → 2,000 CAD files/hour
+Privilege escalation
+Normal:
+Engineering User
+
+Suspicious:
+Engineering User
+        ↓
+Administrator role
+        ↓
+Mass data export
+Unusual geographic access
+Normal:
+India → PLM
+
+Suspicious:
+India → 15 minutes later → Europe
+
+These should be treated as detection signals rather than automatic proof of compromise.
+
+11. Data Protection
+
+PLM data should be classified according to business impact.
+
+Example:
+
+Data	Classification
+Public documentation	Public
+General product information	Internal
+Engineering drawings	Confidential
+CAD source files	Highly Confidential
+Product architecture	Highly Confidential
+Defense-related design data	Restricted
+Supplier proprietary data	Confidential
+
+Security controls should then follow the classification.
+
+12. Encryption
+
+Security architecture should consider encryption:
+
+In transit
+User
+  │
+ HTTPS/TLS
+  │
+PLM
+  │
+ TLS
+  │
+Integration
+At rest
+
+Sensitive data should be protected through appropriate storage/database encryption mechanisms supported by the deployment architecture.
+
+Encryption should also be considered for:
+
+Backups
+Replicated data
+File repositories
+Integration queues
+Temporary exports
+13. Supplier and Third-Party Access
+
+Supplier access is one of the highest-risk areas of a collaborative PLM environment.
+
+Example:
+
+OEM
+ │
+ ├──────── Internal Engineers
+ │
+ ├──────── Manufacturing
+ │
+ └──────── Supplier
+              │
+              └── Limited Product Data
+
+Supplier accounts should have:
+
+Explicit expiration dates
+Minimum required permissions
+MFA
+Segmented product access
+Download monitoring
+Periodic review
+Immediate revocation when the relationship ends
+14. Customization Risk
+
+Enterprise PLM systems are frequently customized.
+
+Examples include:
+
+Custom workflows
+Custom APIs
+Custom Java/.NET services
+Custom UI
+Custom integrations
+Custom authentication
+Custom reporting
+
+These extensions can introduce vulnerabilities even when the underlying PLM platform is securely configured.
+
+Security review should therefore include:
+
+Vendor Product
+      +
+Custom Code
+      +
+Integration Code
+      +
+Infrastructure
+15. Defensive PLM Security Scanner Example
+
+The following Python example demonstrates a non-invasive configuration audit.
+
+It does not exploit Windchill or ENOVIA. Instead, it checks a supplied configuration export for potentially dangerous security settings.
+
+#!/usr/bin/env python3
+
+"""
+PLM Security Configuration Auditor
+
+Defensive example for identifying potentially risky
+configuration settings in a PLM configuration export.
+
+Input:
+    JSON configuration file
+
+Usage:
+    python plm_security_audit.py config.json
+"""
+
+import json
+import sys
+
+
+SECURITY_RULES = {
+    "mfa_enabled": {
+        "expected": True,
+        "severity": "HIGH",
+        "message": "MFA is not enabled."
+    },
+    "tls_enabled": {
+        "expected": True,
+        "severity": "HIGH",
+        "message": "TLS is not enabled."
+    },
+    "audit_logging": {
+        "expected": True,
+        "severity": "HIGH",
+        "message": "Security audit logging is disabled."
+    },
+    "default_admin_enabled": {
+        "expected": False,
+        "severity": "CRITICAL",
+        "message": "Default administrative account is enabled."
+    },
+    "external_sharing_enabled": {
+        "expected": False,
+        "severity": "MEDIUM",
+        "message": "Unrestricted external sharing is enabled."
+    }
+}
+
+
+def audit_configuration(config):
+    findings = []
+
+    for setting, rule in SECURITY_RULES.items():
+        actual = config.get(setting)
+
+        if actual != rule["expected"]:
+            findings.append({
+                "setting": setting,
+                "severity": rule["severity"],
+                "finding": rule["message"],
+                "actual_value": actual,
+                "expected_value": rule["expected"]
+            })
+
+    return findings
+
+
+def print_report(findings):
+    if not findings:
+        print("[PASS] No configured security gaps detected.")
+        return
+
+    print("\nPLM SECURITY AUDIT")
+    print("=" * 60)
+
+    for finding in findings:
+        print(f"\n[{finding['severity']}] {finding['setting']}")
+        print(f"Finding : {finding['finding']}")
+        print(f"Actual  : {finding['actual_value']}")
+        print(f"Expected: {finding['expected_value']}")
+
+
+def main():
+    if len(sys.argv) != 2:
+        print("Usage: python plm_security_audit.py config.json")
+        sys.exit(1)
+
+    try:
+        with open(sys.argv[1], "r", encoding="utf-8") as file:
+            config = json.load(file)
+
+    except (OSError, json.JSONDecodeError) as error:
+        print(f"[ERROR] Unable to read configuration: {error}")
+        sys.exit(1)
+
+    findings = audit_configuration(config)
+    print_report(findings)
+
+
+if __name__ == "__main__":
+    main()
+Example configuration
+{
+    "mfa_enabled": true,
+    "tls_enabled": true,
+    "audit_logging": true,
+    "default_admin_enabled": false,
+    "external_sharing_enabled": true
+}
+
+Example output:
+
+PLM SECURITY AUDIT
+============================================================
+
+[MEDIUM] external_sharing_enabled
+Finding : Unrestricted external sharing is enabled.
+Actual  : True
+Expected: False
+
+This pattern can be expanded to consume approved configuration exports or APIs from a controlled test environment.
+
+16. Automated Security Checks
+
+A mature PLM security scanner could evaluate:
+
+Authentication
+├── MFA
+├── SSO
+├── Session timeout
+└── Password policy
+
+Authorization
+├── Privileged users
+├── Dormant accounts
+├── Role conflicts
+└── Excessive permissions
+
+Data
+├── Sensitive documents
+├── External sharing
+├── Downloads
+└── Encryption
+
+Integration
+├── API authentication
+├── Service accounts
+├── TLS
+└── Token lifetime
+
+Monitoring
+├── Audit logging
+├── SIEM integration
+├── Alerting
+└── Anomaly detection
+17. Security Risk Model
+
+A practical PLM risk score can be calculated using:
+
+Risk = Likelihood × Impact
+
+Example:
+
+Finding	Likelihood	Impact	Risk
+Excessive administrator privileges	4	5	20
+Missing MFA	4	5	20
+Unrestricted CAD download	4	5	20
+Weak service-account permissions	3	5	15
+Missing audit logging	3	4	12
+Poor data classification	3	4	12
+Legacy custom API	3	5	15
+
+Suggested classification:
+
+1–5    Low
+6–10   Medium
+11–15  High
+16–25  Critical
+18. Recommended Security Controls
+Identity
+Centralized SSO
+MFA
+Conditional access
+Privileged Identity Management
+Automated account lifecycle
+Dormant-account detection
+Authorization
+Least privilege
+RBAC
+Separation of duties
+Periodic access certification
+Privileged-role monitoring
+Application
+Secure configuration baselines
+Security patch management
+Secure SDLC for customizations
+API security testing
+Dependency management
+Data
+Data classification
+Encryption
+DLP
+Controlled downloads
+Backup protection
+Data-loss monitoring
+Integration
+Mutual TLS where appropriate
+OAuth/service authentication where supported
+Short-lived credentials
+Dedicated service accounts
+API gateway controls
+Network segmentation
+Monitoring
+Centralized logging
+SIEM
+UEBA
+Alerting
+Security dashboards
+Incident-response integration
+19. PLM Zero-Trust Model
+
+A modern PLM environment should follow Zero Trust principles.
+
+Instead of:
+
+User is inside corporate network
+        ↓
+User is trusted
+        ↓
+PLM access
+
+use:
+
+User
+ │
+ ├── Identity verification
+ ├── MFA
+ ├── Device posture
+ ├── Location/context
+ ├── Role
+ ├── Resource classification
+ └── Requested action
+          │
+          ▼
+   Authorization decision
+          │
+          ▼
+       PLM data
+
+The core principle is:
+
+Never assume trust solely because a user or system is inside the corporate network.
+
+20. Security Maturity Roadmap
+Phase 1 — Visibility
+Inventory
+   ↓
+Users
+   ↓
+Roles
+   ↓
+Integrations
+   ↓
+Sensitive Data
+Phase 2 — Hardening
+MFA
+RBAC
+TLS
+Logging
+Service-account controls
+Phase 3 — Monitoring
+SIEM
+UEBA
+DLP
+Anomaly Detection
+Phase 4 — Continuous Security
+Continuous configuration assessment
+       +
+Continuous identity review
+       +
+API security monitoring
+       +
+Automated remediation
+21. Security Assessment Checklist
+[ ] PLM asset inventory completed
+[ ] All privileged users identified
+[ ] MFA enabled for privileged accounts
+[ ] SSO configuration reviewed
+[ ] Dormant accounts identified
+[ ] Service accounts documented
+[ ] Service accounts use least privilege
+[ ] External users reviewed
+[ ] Supplier access reviewed
+[ ] RBAC model documented
+[ ] Sensitive CAD data classified
+[ ] Download activity monitored
+[ ] Encryption verified
+[ ] TLS configuration reviewed
+[ ] API endpoints inventoried
+[ ] API authentication reviewed
+[ ] API authorization tested
+[ ] Custom code inventoried
+[ ] Audit logging enabled
+[ ] Logs integrated with SIEM
+[ ] Security alerts configured
+[ ] Backup security reviewed
+[ ] Incident response procedure documented
+[ ] Periodic access certification implemented
+22. Key Security Gaps: Windchill vs ENOVIA
+
+The most important conclusion is that PLM cybersecurity should not be approached solely as a product vulnerability assessment.
+
+Layer	Windchill	ENOVIA
+Product configuration	Review required	Review required
+Identity	Enterprise IAM dependent	Enterprise IAM dependent
+Authorization	Highly configuration dependent	Highly configuration dependent
+API security	Integration dependent	Integration dependent
+Supplier access	Major concern	Major concern
+Customization	Major concern	Major concern
+CAD/IP protection	Critical	Critical
+Logging/SIEM	Deployment dependent	Deployment dependent
+Service accounts	Major concern	Major concern
+Data governance	Organizational responsibility	Organizational responsibility
+
+Therefore, the largest practical security gaps often exist at the integration and governance layer rather than in the core PLM application alone.
+
+23. Conclusion
+
+PLM platforms represent a high-value target because they aggregate intellectual property, product architecture, engineering data, manufacturing information, and organizational knowledge.
+
+A compromised PLM environment could potentially expose:
+
+CAD
+BOM
+Product Architecture
+Engineering Changes
+Supplier Information
+Manufacturing Data
+Product Roadmaps
+Technical Documentation
+
+Consequently, cybersecurity for Windchill and ENOVIA should be implemented as a layered program covering:
+
+Identity
+   +
+Authorization
+   +
+Application Security
+   +
+API Security
+   +
+Data Protection
+   +
+Infrastructure
+   +
+Monitoring
+   +
+Governance
+
+The most effective approach is not simply to ask:
+
+"Is the PLM application secure?"
+
+Instead, organizations should ask:
+
+"Can an unauthorized identity, compromised account, malicious insider, vulnerable integration, or compromised endpoint obtain or modify sensitive product information?"
+
+That question shifts PLM security from a product-centric model to an enterprise product-security architecture.
+
+Suggested GitHub Repository Structure
+plm-cybersecurity-assessment/
+│
+├── README.md
+│
+├── docs/
+│   ├── windchill-security-gaps.md
+│   ├── enovia-security-gaps.md
+│   ├── api-security.md
+│   ├── identity-access-management.md
+│   └── zero-trust-plm.md
+│
+├── scripts/
+│   └── plm_security_audit.py
+│
+├── examples/
+│   └── sample-config.json
+│
+├── checklists/
+│   └── plm-security-checklist.md
+│
+└── LICENSE
+Disclaimer
+
+This assessment framework is intended for authorized defensive security assessment, architecture review, and configuration hardening. Specific security behavior depends on the PLM product version, deployment architecture, enabled modules, customizations, integrations, and organizational configuration. Product-specific findings should be validated against the applicable vendor security documentation and supported security advisories.
