@@ -1,0 +1,45 @@
+{
+    "mfa_enabled": true,
+    "sso_enabled": true,
+    "tls_enabled": true,
+    "audit_logging": true,
+    "default_admin_enabled": false,
+    "external_sharing_enabled": true,
+
+    "accounts": [
+        {
+            "username": "engineering_user",
+            "admin": false,
+            "dormant": false
+        },
+        {
+            "username": "old_engineer",
+            "admin": false,
+            "dormant": true
+        },
+        {
+            "username": "plm_admin",
+            "admin": true,
+            "dormant": false
+        }
+    ],
+
+    "service_accounts": [
+        {
+            "name": "plm-erp-integration",
+            "role": "administrator",
+            "long_lived_token": true
+        },
+        {
+            "name": "plm-reporting",
+            "role": "read-only",
+            "long_lived_token": false
+        }
+    ],
+
+    "api": {
+        "authentication": "oauth",
+        "object_level_authorization": false,
+        "tls": true
+    }
+}
