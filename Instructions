@@ -1,0 +1,24 @@
+Before Running Please 
+Run the Initial Script
+
+python plm_security_audit.py Test_conf.json
+
+Expected output 
+
+[HIGH] Configuration / external_sharing_enabled
+Finding : Unrestricted external sharing is enabled.
+
+[MEDIUM] Identity / old_engineer
+Finding : Dormant account remains enabled.
+
+[HIGH] Authorization / plm_admin
+Finding : Account has administrative privileges.
+
+[CRITICAL] Service Account / plm-erp-integration
+Finding : Integration service account has administrator privileges.
+
+[HIGH] API Security / plm-erp-integration
+Finding : Service account uses a long-lived token.
+
+[CRITICAL] API Security / object_level_authorization
+Finding : Object-level authorization is not explicitly enabled.
