@@ -2,7 +2,9 @@ Cybersecurity Gaps in PLM Platforms: Windchill & ENOVIA
 Security Assessment Datasheet
 
 Domain: Product Lifecycle Management (PLM)
+
 Platforms: PTC Windchill and Dassault Systèmes ENOVIA
+
 Assessment Focus: Application Security, Identity & Access Management, Data Protection, Integration Security, Auditability, and DevSecOps
 Audience: PLM Architects, Cybersecurity Engineers, Product Security Teams, Administrators, and Enterprise Architects
 
